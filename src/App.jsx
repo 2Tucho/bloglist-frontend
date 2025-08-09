@@ -10,6 +10,7 @@ const App = () => {
     url: ""
   })
   const [errorMessage, setErrorMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
@@ -40,11 +41,16 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setSuccessMessage(`${newBlog.title} by ${user.name} added`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 4000)
         setNewBlog({
           title: "",
           url: ""
         })
       })
+
   }
 
   const handleBlogChange = (event) => {
@@ -83,6 +89,7 @@ const App = () => {
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
+      <h1>Login to App</h1>
       <div>
         username
         <input
@@ -130,20 +137,26 @@ const App = () => {
 
   return (
     <div>
-      <h2>Blogs</h2>
-
-      {errorMessage ? <p>{errorMessage}</p> : null}
 
       {user === null ?
         loginForm() :
         <div>
           <p>{user.name} logged in</p><button onClick={() => handleLogout()}>logout</button>
+
+          {successMessage ? <p style={{color: "green"}}>{successMessage}</p> : null}
+
+          <h2>Blogs</h2>
+
           {blogForm()}
+
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
         </div>
       }
+
+      {errorMessage ? <p style={{color: "red"}}>{errorMessage}</p> : null}
+
     </div>
   )
 }
