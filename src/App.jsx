@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
+import Togglable from "./components/Togglable"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -143,11 +144,15 @@ const App = () => {
         <div>
           <p>{user.name} logged in</p><button onClick={() => handleLogout()}>logout</button>
 
-          {successMessage ? <p style={{color: "green"}}>{successMessage}</p> : null}
+          {successMessage ? <p style={{ color: "green" }}>{successMessage}</p> : null}
 
           <h2>Blogs</h2>
+          <Togglable>
+            {blogForm()}
 
-          {blogForm()}
+          </Togglable>
+
+
 
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
@@ -155,7 +160,7 @@ const App = () => {
         </div>
       }
 
-      {errorMessage ? <p style={{color: "red"}}>{errorMessage}</p> : null}
+      {errorMessage ? <p style={{ color: "red" }}>{errorMessage}</p> : null}
 
     </div>
   )
