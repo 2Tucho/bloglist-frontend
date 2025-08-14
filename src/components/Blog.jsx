@@ -1,6 +1,7 @@
 import { useState } from "react"
+import blogServices from "../services/blogs"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, setBlogs, blogs }) => {
     const [toggleInfo, setToggleInfo] = useState(false)
 
     const blogStyle = {
@@ -12,8 +13,17 @@ const Blog = ({ blog }) => {
     }
 
     const handleToggleInfo = (change) => {
-        console.log(change)
         setToggleInfo(change)
+    }
+
+    const addLike = () => {
+        const changedBlog = {...blog, likes: blog.likes + 1}
+
+        blogServices
+            .update(blog.id, changedBlog)
+            .then(returnedBlog => {
+                setBlogs(blogs.map(b => b.id !== blog.id ? b : returnedBlog))
+      })
     }
 
     return (!toggleInfo ? (<div style={blogStyle}>
@@ -23,7 +33,7 @@ const Blog = ({ blog }) => {
         <button onClick={() => handleToggleInfo(false)}>Hide</button>
         <p>{blog.title}</p>
         <p>{blog.url}</p>
-        <p>Likes: {blog.likes}</p> <button>Like</button>
+        <p>Likes: {blog.likes}</p> <button onClick={() => addLike()}>Like</button>
         <p>{blog.author}</p>
     </div >)
     )
