@@ -17,7 +17,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
     }
 
     const addLike = () => {
-        const changedBlog = {...blog, likes: blog.likes + 1}
+        const changedBlog = {...blog, likes: blog.likes + 1, user: typeof blog.user === "object" ? blog.user.id : blog.user}
 
         blogServices
             .update(blog.id, changedBlog)
