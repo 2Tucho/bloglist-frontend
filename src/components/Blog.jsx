@@ -26,6 +26,13 @@ const Blog = ({ blog, setBlogs, blogs }) => {
       })
     }
 
+    const removeBlog = (id) => {
+        console.log(id)
+        blogServices
+            .deleteBlog(id)
+            .then(setBlogs(blogs.filter(b => b.id !== id)))
+    }
+
     return (!toggleInfo ? (<div style={blogStyle}>
         {blog.title} {blog.author}
         <button onClick={() => handleToggleInfo(true)}>View</button>
@@ -35,6 +42,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
         <p>{blog.url}</p>
         <p>Likes: {blog.likes}</p> <button onClick={() => addLike()}>Like</button>
         <p>{blog.author}</p>
+        <button onClick={() => removeBlog(blog.id)}>Remove</button>
     </div >)
     )
 }
