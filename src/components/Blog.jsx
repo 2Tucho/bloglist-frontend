@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from "prop-types"
 import blogServices from "../services/blogs"
 
 const Blog = ({ blog, setBlogs, blogs }) => {
@@ -7,7 +8,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
     const blogStyle = {
         paddingTop: 10,
         paddingLeft: 2,
-        border: 'solid',
+        border: "solid",
         borderWidth: 1,
         marginBottom: 5
     }
@@ -17,13 +18,20 @@ const Blog = ({ blog, setBlogs, blogs }) => {
     }
 
     const addLike = () => {
-        const changedBlog = {...blog, likes: blog.likes + 1, user: typeof blog.user === "object" ? blog.user.id : blog.user}
+        const changedBlog = { ...blog, likes: blog.likes + 1, user: typeof blog.user === "object" ? blog.user.id : blog.user }
 
         blogServices
             .update(blog.id, changedBlog)
             .then(returnedBlog => {
                 setBlogs(blogs.map(b => b.id !== blog.id ? b : returnedBlog))
-      })
+            })
+    }
+
+    const removeBlog = (id) => {
+        console.log(id)
+        blogServices
+            .deleteBlog(id)
+            .then(setBlogs(blogs.filter(b => b.id !== id)))
     }
 
     return (!toggleInfo ? (<div style={blogStyle}>
@@ -35,8 +43,17 @@ const Blog = ({ blog, setBlogs, blogs }) => {
         <p>{blog.url}</p>
         <p>Likes: {blog.likes}</p> <button onClick={() => addLike()}>Like</button>
         <p>{blog.author}</p>
+        <button onClick={() => removeBlog(blog.id)}>Remove</button>
     </div >)
     )
+}
+
+Blog.displayName = "Blog"
+
+Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    setBlogs: PropTypes.func.isRequired,
+    blogs: PropTypes.array.isRequired
 }
 
 export default Blog
