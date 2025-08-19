@@ -34,10 +34,10 @@ const Blog = ({ blog, setBlogs, blogs }) => {
             .then(setBlogs(blogs.filter(b => b.id !== id)))
     }
 
-    return (!toggleInfo ? (<div style={blogStyle}>
+    return (!toggleInfo ? (<div style={blogStyle} className="classBlog">
         {blog.title} {blog.author}
         <button onClick={() => handleToggleInfo(true)}>View</button>
-    </div>) : (<div style={blogStyle}>
+    </div>) : (<div style={blogStyle} className="classBlog">
         <button onClick={() => handleToggleInfo(false)}>Hide</button>
         <p>{blog.title}</p>
         <p>{blog.url}</p>
