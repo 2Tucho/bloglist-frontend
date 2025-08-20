@@ -1,8 +1,7 @@
 import { useState } from "react"
 import PropTypes from "prop-types"
-import blogServices from "../services/blogs"
 
-const Blog = ({ blog, setBlogs, blogs }) => {
+const Blog = ({ blog, handleLike, removeBlog }) => {
     const [toggleInfo, setToggleInfo] = useState(false)
 
     const blogStyle = {
@@ -17,23 +16,6 @@ const Blog = ({ blog, setBlogs, blogs }) => {
         setToggleInfo(change)
     }
 
-    const addLike = () => {
-        const changedBlog = { ...blog, likes: blog.likes + 1, user: typeof blog.user === "object" ? blog.user.id : blog.user }
-
-        blogServices
-            .update(blog.id, changedBlog)
-            .then(returnedBlog => {
-                setBlogs(blogs.map(b => b.id !== blog.id ? b : returnedBlog))
-            })
-    }
-
-    const removeBlog = (id) => {
-        console.log(id)
-        blogServices
-            .deleteBlog(id)
-            .then(setBlogs(blogs.filter(b => b.id !== id)))
-    }
-
     return (!toggleInfo ? (<div style={blogStyle} className="classBlog">
         {blog.title} {blog.author}
         <button onClick={() => handleToggleInfo(true)}>View</button>
@@ -41,7 +23,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
         <button onClick={() => handleToggleInfo(false)}>Hide</button>
         <p>{blog.title}</p>
         <p>{blog.url}</p>
-        <p>Likes: {blog.likes}</p> <button onClick={() => addLike()}>Like</button>
+        <p>Likes: {blog.likes}</p> <button onClick={() => handleLike(blog.id)}>Like</button>
         <p>{blog.author}</p>
         <button onClick={() => removeBlog(blog.id)}>Remove</button>
     </div >)
@@ -52,8 +34,8 @@ Blog.displayName = "Blog"
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    setBlogs: PropTypes.func.isRequired,
-    blogs: PropTypes.array.isRequired
+    handleLike: PropTypes.func.isRequired,
+    removeBlog: PropTypes.func.isRequired
 }
 
 export default Blog

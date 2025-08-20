@@ -43,6 +43,12 @@ const App = () => {
 
     }
 
+    const removeBlog = (id) => {
+        blogService
+            .deleteBlog(id)
+            .then(setBlogs(blogs.filter(b => b.id !== id)))
+    }
+
     const handleLogin = async (event) => {
         event.preventDefault()
 
@@ -93,7 +99,16 @@ const App = () => {
         )
     }
 
-
+    const handleLike = async (id) => {
+        const blogToUpdate = blogs.find(b => b.id === id)
+        const updatedBlog = {
+            ...blogToUpdate,
+            likes: blogToUpdate.likes + 1,
+            user: typeof blogToUpdate.user === "object" ? blogToUpdate.user.id : blogToUpdate.user
+        }
+        const returnedBlog = await blogService.update(id, updatedBlog)
+        setBlogs(blogs.map(b => b.id !== id ? b : returnedBlog))
+    }
 
     return (
         <div>
@@ -115,7 +130,7 @@ const App = () => {
                     {blogs
                         .sort((a, b) => b.likes - a.likes)
                         .map(blog =>
-                            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs}/>
+                            <Blog key={blog.id} blog={blog} handleLike={handleLike} removeBlog={removeBlog} />
                         )
                     }
 
