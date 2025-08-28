@@ -9,6 +9,7 @@ import Togglable from "./components/Togglable"
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [errorMessage, setErrorMessage] = useState("")
+    const [firstToken, setFirstToken] = useState(true)
     const [successMessage, setSuccessMessage] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -28,7 +29,7 @@ const App = () => {
             setUser(user)
             blogService.setToken(user.token)
         }
-    }, [])
+    }, [firstToken])
 
     const addBlog = (blogObject) => {
         blogService
@@ -63,6 +64,7 @@ const App = () => {
             setUser(user)
             setUsername("")
             setPassword("")
+            setFirstToken(!firstToken)
         } catch (exception) {
             setErrorMessage("Wrong credentials")
             setTimeout(() => {
